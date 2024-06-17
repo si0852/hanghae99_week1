@@ -1,5 +1,6 @@
 package io.hhplus.tdd.service;
 
+import io.hhplus.tdd.dao.UserPointDao;
 import io.hhplus.tdd.point.UserPoint;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -42,5 +43,20 @@ public class PointServiceTest {
         //then
         Assertions.assertThat(userPoint).isEqualTo(new UserPoint(id, amount, millis));
     }
+
+    @Test
+    @DisplayName("세번째 유저별 포인트 저장하는 서비스로직: dao, repository 연동하기")
+    void insert_point_service_connect_repository() {
+        //given
+        long id = 1L;
+        long amount = 10L;
+        long millis = System.currentTimeMillis();
+        //when
+        UserPoint userPoint = pointService.insertUserPoint(id, amount, millis);
+        //then
+        Assertions.assertThat(userPoint).isEqualTo(new UserPoint(id, amount, millis));
+    }
+
+
 
 }
