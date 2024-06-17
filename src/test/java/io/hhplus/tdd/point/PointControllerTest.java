@@ -6,10 +6,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.web.servlet.function.RequestPredicates.contentType;
 
 @AutoConfigureMockMvc
 @SpringBootTest
@@ -17,7 +25,6 @@ class PointControllerTest {
 
     @Autowired
     MockMvc mvc;
-
 
     @Autowired
     ObjectMapper objectMapper;
@@ -34,17 +41,33 @@ class PointControllerTest {
         mvc.perform(get("/point/"+id))
                 .andExpect(status().isOk())
                 .andExpect(content().json(content));
+    }
+
+    @Test
+    @DisplayName("특정 유저의 포인트를 충전하는 기능 Controller 첫번째 테스트: id, amount 넣었을때 성공")
+    void charge() throws Exception{
+        //given
+        long id = 1L;
+        long amount = 1000L;
+        UserPoint userPoint = new UserPoint(0, 0, 0);
+        String content = objectMapper.writeValueAsString(userPoint);
+
+        //when
+        //then
+        mvc.perform(patch( "/point/"+id+"/charge")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(String.valueOf(amount)))
+                .andExpect(status().isOk())
+                .andExpect(content().json(content));
 
     }
+
 
 //    @Test
 //    void history() {
 //    }
 //
-//    @Test
-//    void charge() {
-//    }
-//
+
 //    @Test
 //    void use() {
 //    }
