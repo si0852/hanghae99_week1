@@ -59,7 +59,14 @@ class PointControllerTest {
                         .content(String.valueOf(amount)))
                 .andExpect(status().isOk())
                 .andExpect(content().json(content));
+    }
 
+    @Test
+    @DisplayName("특정 유저의 포인트를 충전하는 Controller 두번째 테스트: 서비스 로직 추가")
+    void charge_add_userpoint() throws Exception {
+        //given
+        //when
+        //then
     }
 
 

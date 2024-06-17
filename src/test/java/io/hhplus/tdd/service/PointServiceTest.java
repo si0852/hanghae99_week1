@@ -1,0 +1,31 @@
+package io.hhplus.tdd.service;
+
+import io.hhplus.tdd.point.UserPoint;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+public class PointServiceTest {
+
+    private PointService pointService;
+
+    @Autowired
+    public PointServiceTest(PointService pointService) {
+        this.pointService = pointService;
+    }
+
+    @Test
+    @DisplayName("첫번째 유저별 포인트 저장하는 서비스로직 : 모든 경우가 성공하는 경우")
+    void insert_point_service() {
+        //given
+        long id = 1L;
+        long amount = 10L;
+        //when
+        UserPoint userPoint = pointService.insertUserPoint(id, amount);
+        //then
+        Assertions.assertThat(userPoint).isEqualTo(new UserPoint(0, 0, 0));
+    }
+}
