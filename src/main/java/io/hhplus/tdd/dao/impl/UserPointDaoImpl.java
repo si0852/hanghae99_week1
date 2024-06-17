@@ -17,7 +17,12 @@ public class UserPointDaoImpl implements UserPointDao {
     }
 
     @Override
-    public UserPoint insertUserPoint(long id, long amount, long millis) {
-        return new UserPoint(id, amount, System.currentTimeMillis());
+    public UserPoint insertUserPoint(long id, long amount) {
+        return userPointRepository.insertOrUpdate(id, amount);
+    }
+
+    @Override
+    public UserPoint selectPointByUserId(long id) {
+        return userPointRepository.selectById(id);
     }
 }

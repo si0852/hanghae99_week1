@@ -18,7 +18,12 @@ public class PointServiceImpl implements PointService {
 
 
     @Override
-    public UserPoint insertUserPoint(long id, long amount, long millis) {
-        return userPointDao.insertUserPoint(id,amount, millis);
+    public UserPoint insertUserPoint(long id, long amount) {
+        return userPointDao.insertUserPoint(id,amount);
+    }
+
+    @Override
+    public UserPoint selectUserPoint(long id) {
+        return userPointDao.selectPointByUserId(id);
     }
 }
