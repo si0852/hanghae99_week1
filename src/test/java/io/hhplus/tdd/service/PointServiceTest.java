@@ -23,9 +23,24 @@ public class PointServiceTest {
         //given
         long id = 1L;
         long amount = 10L;
+        long millis = System.currentTimeMillis();
         //when
-        UserPoint userPoint = pointService.insertUserPoint(id, amount);
+        UserPoint userPoint = pointService.insertUserPoint(id, amount, millis);
         //then
         Assertions.assertThat(userPoint).isEqualTo(new UserPoint(0, 0, 0));
     }
+
+    @Test
+    @DisplayName("두번째 유저별 포인트 저장하는 서비스로직 : 충전한 유저 id와 충전양을 리턴")
+    void insert_point_service2() {
+        //given
+        long id = 1L;
+        long amount = 10L;
+        long millis = System.currentTimeMillis();
+        //when
+        UserPoint userPoint = pointService.insertUserPoint(id, amount, millis);
+        //then
+        Assertions.assertThat(userPoint).isEqualTo(new UserPoint(id, amount, millis));
+    }
+
 }

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class PointServiceImpl implements PointService {
     @Override
-    public UserPoint insertUserPoint(long id, long amount) {
-        return new UserPoint(0,0,0);
+    public UserPoint insertUserPoint(long id, long amount, long millis) {
+        return new UserPoint(id,amount,millis);
     }
 }
