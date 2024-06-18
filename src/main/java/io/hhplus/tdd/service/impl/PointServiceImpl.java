@@ -9,7 +9,9 @@ import io.hhplus.tdd.service.PointService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+
 
 @Service
 public class PointServiceImpl implements PointService {
@@ -55,6 +57,15 @@ public class PointServiceImpl implements PointService {
             }
             pointHistoryDao.insert(id, amount, TransactionType.USE, System.currentTimeMillis());
             return userPointDao.useUserPoint(id, calAmount);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public List<PointHistory> selectPointHistory(long id) {
+        try {
+            return new ArrayList<>();
         } catch (Exception e) {
             return null;
         }

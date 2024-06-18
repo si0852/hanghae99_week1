@@ -249,6 +249,19 @@ public class PointServiceTest {
         assertEquals(1, userHistory.size());
     }
 
+    @Test
+    @DisplayName("포인트 내역 조회 서비스 로직: 빈 리스트 리턴")
+    void selectPointHistoryandReturnEmptyList() {
+        //given
+        long id = 1L;
+
+        //when
+        List<PointHistory> selectHistory = pointService.selectPointHistory(id);
+
+        //then
+        assertEquals(0, selectHistory.size());
+    }
+
 //
 //    @Test
 //    @DisplayName("첫번째 유저별 포인트 조회: 모든 타입의 history 금액 더하기")
