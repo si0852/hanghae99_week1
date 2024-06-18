@@ -67,6 +67,34 @@ class PointControllerTest {
     }
 
     @Test
+    @DisplayName("특정 유저의 포인트를 조회하는 기능 API Test: 특정 User를 조회하였을때")
+    void selectPointByUser() throws Exception{
+        //given
+        long id = 1L;
+        UserPoint userPoint = userPointDao.selectPointByUserId(id);
+        String content = objectMapper.writeValueAsString(userPoint);
+        //when
+        //then
+        mvc.perform(get("/point/"+id))
+                .andExpect(status().isOk())
+                .andExpect(content().json(content));
+    }
+
+    @Test
+    @DisplayName("특정 유저의 포인트를 조회하는 기능 API Test2: 특정 User를 조회하였을때")
+    void selectPointByUser2() throws Exception{
+        //given
+        long id = 2L;
+        UserPoint userPoint = userPointDao.selectPointByUserId(id);
+        String content = objectMapper.writeValueAsString(userPoint);
+        //when
+        //then
+        mvc.perform(get("/point/"+id))
+                .andExpect(status().isOk())
+                .andExpect(content().json(content));
+    }
+
+    @Test
     @DisplayName("특정 유저의 포인트를 충전하는 기능 Controller 첫번째 테스트: id, amount 넣었을때 성공")
     void charge() throws Exception{
         //given
