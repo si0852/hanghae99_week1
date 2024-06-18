@@ -273,6 +273,25 @@ public class PointServiceTest {
         assertEquals(total, userPoint.point());
     }
 
+    @Test
+    @DisplayName("두번째 유저별 포인트 조회: 타입별(charge) history 금액 더하기")
+    void selectByUserIdandTypeSum() {
+        //given
+        long id = 3L;
+        long amount = 1000L;
+        long amount2 = 1200l;
+        long amount3 = 100L;
+        long total = amount + amount2;
+        UserPoint user1 = pointService.insertUserPoint(id, amount);
+        UserPoint user2 = pointService.insertUserPoint(id, amount2);
+        UserPoint user3 = pointService.useUserPoint(id, amount3);
+
+        //when
+        UserPoint userPoint = pointService.selectUserPoint(id);
+
+        //then
+        assertEquals(total, userPoint.point());
+    }
 
 
 }

@@ -40,7 +40,8 @@ public class PointServiceImpl implements PointService {
     public UserPoint selectUserPoint(long id) {
         try {
             List<PointHistory> historyPoint = pointHistoryDao.selectAllByUserId(id);
-            long totalPoint = historyPoint.stream().mapToLong(PointHistory::amount).sum();
+            List<PointHistory> historyPointByCharge = historyPoint.stream().filter(history -> history.type().equals(TransactionType.CHARGE)).toList();
+            long totalPoint = historyPointByCharge.stream().mapToLong(PointHistory::amount).sum();
 //            return userPointDao.selectPointByUserId(id);
             return new UserPoint(id, totalPoint, 0);
         } catch (Exception e) {
