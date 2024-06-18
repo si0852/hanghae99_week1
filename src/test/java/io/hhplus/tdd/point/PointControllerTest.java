@@ -120,6 +120,23 @@ class PointControllerTest {
     }
 
     @Test
+    @DisplayName("특정 유저의 포인트를 사용하는 기능 API Test : 포인트가 초과되었을때")
+    void useApiTest() throws Exception{
+        //given
+        long id = 2L;
+        long amount = 1000000L;
+
+        //when
+        //then
+        mvc.perform(patch("/point/" + id + "/use")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(String.valueOf(amount)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(id))
+                .andExpect(jsonPath("$.point").value(0));
+    }
+
+    @Test
     @DisplayName("포인트 히스토리 조회 기능 Controller Test: id 넣을을때 200 코드 리턴")
     void history() throws Exception {
         //given
