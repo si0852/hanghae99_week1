@@ -1,7 +1,6 @@
 package io.hhplus.tdd.point;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.hhplus.tdd.service.PointServiceTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -11,16 +10,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.web.servlet.function.RequestPredicates.contentType;
 
 @AutoConfigureMockMvc
 @SpringBootTest
@@ -81,15 +76,26 @@ class PointControllerTest {
                             .content(String.valueOf(amount)))
                     .andExpect(status().isOk())
                     .andExpect(content().json(content));
-
     }
 
-//    @Test
-//    void history() {
-//    }
-//
+    @Test
+    @DisplayName("포인트 히스토리 조회 기능 Controller Test: id 넣을을때 200 코드 리턴")
+    void history() throws Exception {
+        //given
+        long id = 1L;
+        long amount = 1000L;
 
-//    @Test
-//    void use() {
-//    }
+        String content = objectMapper.writeValueAsString(List.of());
+
+        //when
+        //then
+        mvc.perform(get("/point/{id}/histories", id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(String.valueOf(amount)))
+                .andExpect(status().isOk())
+                .andExpect(content().json(content));
+    }
+
+
+
 }
