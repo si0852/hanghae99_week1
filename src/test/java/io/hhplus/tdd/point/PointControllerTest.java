@@ -47,8 +47,18 @@ class PointControllerTest {
     @BeforeEach
     void setData() {
         userPointDao.insertUserPoint(1L, amount1);
+        userPointDao.insertUserPoint(1L, amount3);
+        userPointDao.insertUserPoint(1L, amount2);
         userPointDao.insertUserPoint(2L, amount2);
+        userPointDao.insertUserPoint(2L, amount3);
         userPointDao.insertUserPoint(3L, amount3);
+        userPointDao.insertUserPoint(3L, amount1);
+        userPointDao.useUserPoint(1L, amount2);
+        userPointDao.useUserPoint(2L, amount2);
+        userPointDao.useUserPoint(3L, amount2);
+        userPointDao.useUserPoint(1L, amount2);
+        userPointDao.useUserPoint(2L, amount2);
+        userPointDao.useUserPoint(3L, amount1);
     }
 
 
@@ -57,7 +67,7 @@ class PointControllerTest {
     void point() throws Exception{
         //given
         long id = 1L;
-        UserPoint userPoint = new UserPoint(0, 0, 0);
+        UserPoint userPoint = userPointDao.selectPointByUserId(id);
         String content = objectMapper.writeValueAsString(userPoint);
         //when
         //then
@@ -100,7 +110,8 @@ class PointControllerTest {
         //given
         long id = 1L;
         long amount = 1000L;
-        UserPoint userPoint = new UserPoint(0, 0, 0);
+        UserPoint userPoint = userPointDao.selectPointByUserId(id);
+        log.info("userPoint : " + userPoint);
         String content = objectMapper.writeValueAsString(userPoint);
 
         //when
@@ -109,15 +120,16 @@ class PointControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(String.valueOf(amount)))
                 .andExpect(status().isOk())
-                .andExpect(content().json(content));
+                .andExpect(jsonPath("$.point").value(userPoint.point()+amount));
     }
 
     @Test
     @DisplayName("특정 유저의 포인트를 충전 API Test")
     void chargeApiTest() throws Exception{
         //given
-        long id = 1L;
+        long id = 2L;
         long amount = 1000L;
+        UserPoint userPoint = userPointDao.selectPointByUserId(id);
 
         //when
         //then
@@ -126,17 +138,16 @@ class PointControllerTest {
                         .content(String.valueOf(amount)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(id))
-                .andExpect(jsonPath("$.point").value(amount+this.amount1));
+                .andExpect(jsonPath("$.point").value(amount+userPoint.point()));
     }
 
     @Test
     @DisplayName("특정 유저의 포인트를 사용하는 기능 Controller Test: id 넣을을때 200 코드 리턴")
     void use() throws Exception{
             //given
-            long id = 1L;
+            long id = 2L;
             long amount = 1000L;
-            UserPoint userPoint = new UserPoint(0, 0, 0);
-            String content = objectMapper.writeValueAsString(userPoint);
+            UserPoint userPoint = userPointDao.selectPointByUserId(id);
 
             //when
             //then
@@ -144,7 +155,7 @@ class PointControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(String.valueOf(amount)))
                     .andExpect(status().isOk())
-                    .andExpect(content().json(content));
+                    .andExpect(jsonPath("$.point").value(userPoint.point()-amount));
     }
 
     @Test
@@ -170,6 +181,7 @@ class PointControllerTest {
         //given
         long id = 3L;
         long amount = 1000L;
+        UserPoint userPoint = userPointDao.selectPointByUserId(id);
 
         //when
         //then
@@ -178,23 +190,36 @@ class PointControllerTest {
                         .content(String.valueOf(amount)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(id))
-                .andExpect(jsonPath("$.point").value(amount3-amount));
+                .andExpect(jsonPath("$.point").value(userPoint.point()-amount));
     }
 
     @Test
     @DisplayName("포인트 히스토리 조회 기능 Controller Test: id 넣을을때 200 코드 리턴")
     void history() throws Exception {
         //given
-        long id = 1L;
-        long amount = 1000L;
+        long id = 2L;
 
-        String content = objectMapper.writeValueAsString(List.of());
+        String content = objectMapper.writeValueAsString(pointHistoryDao.selectAllByUserId(id));
 
         //when
         //then
-        mvc.perform(get("/point/{id}/histories", id)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(String.valueOf(amount)))
+        mvc.perform(get("/point/{id}/histories", id))
+                .andExpect(status().isOk())
+                .andExpect(content().json(content));
+    }
+
+    @Test
+    @DisplayName("포인트 히스토리 조회 기능 API Test: 특정 id를 넣었을때")
+    void historyTestByUserId() throws Exception {
+        //given
+        long id = 2L;
+        List<PointHistory> pointHistories = pointHistoryDao.selectAllByUserId(id);
+        log.info("pointHistories : " + pointHistories.toString());
+        String content = objectMapper.writeValueAsString(pointHistories);
+
+        //when
+        //then
+        mvc.perform(get("/point/{id}/histories", id))
                 .andExpect(status().isOk())
                 .andExpect(content().json(content));
     }
