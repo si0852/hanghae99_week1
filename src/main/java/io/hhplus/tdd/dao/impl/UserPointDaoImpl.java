@@ -25,4 +25,9 @@ public class UserPointDaoImpl implements UserPointDao {
     public UserPoint selectPointByUserId(long id) {
         return userPointRepository.selectById(id);
     }
+
+    @Override
+    public UserPoint useUserPoint(long id, long amount) {
+        return userPointRepository.insertOrUpdate(id, amount);
+    }
 }

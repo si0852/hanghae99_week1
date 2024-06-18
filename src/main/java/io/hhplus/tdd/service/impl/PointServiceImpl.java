@@ -36,11 +36,21 @@ public class PointServiceImpl implements PointService {
 
     @Override
     public UserPoint selectUserPoint(long id) {
-        return userPointDao.selectPointByUserId(id);
+        try {
+            return userPointDao.selectPointByUserId(id);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public UserPoint useUserPoint(long id, long amount) {
-        return userPointDao.selectPointByUserId(id);
+        try {
+            UserPoint selectpoint = userPointDao.selectPointByUserId(id);
+            long  calAmount = selectpoint.point() - amount;
+            return userPointDao.useUserPoint(id, calAmount);
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

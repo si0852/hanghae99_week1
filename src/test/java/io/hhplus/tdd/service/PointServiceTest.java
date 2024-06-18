@@ -177,7 +177,7 @@ public class PointServiceTest {
     }
 
     @Test
-    @DisplayName("두번째 용저별 포인트를 사용하는 서비스 로직: 포인트를 사용하기 전 금액 조회하기")
+    @DisplayName("두번째 유저별 포인트를 사용하는 서비스 로직: 포인트를 사용하기 전 금액 조회하기")
     void selectPointforUsePoint() {
         //given
         long id = 1L;
@@ -191,6 +191,25 @@ public class PointServiceTest {
 
         //then
         assertEquals(amount+amount2, selectPointUser.point());
+    }
+
+    @Test
+    @DisplayName("세번째 유저별 포인트를 사용하는 서비스 로직: 조회한 포인트 - 사용하는 포인트 계산하기")
+    void calculatePoint() {
+        //given
+        long id = 1L;
+        long amount = 1000L;
+        long amount2 = 1200l;
+        pointService.insertUserPoint(id, amount);
+        pointService.insertUserPoint(id, amount2);
+        long usePoint = 1000L;
+
+        //when
+        UserPoint useUserPoint = pointService.useUserPoint(id, usePoint);
+
+        //then
+        long calPoint = (amount2 + amount) - usePoint;
+        assertEquals(calPoint, useUserPoint.point());
     }
 
 
