@@ -2,11 +2,14 @@ package io.hhplus.tdd.service.impl;
 
 import io.hhplus.tdd.dao.PointHistoryDao;
 import io.hhplus.tdd.dao.UserPointDao;
+import io.hhplus.tdd.point.PointHistory;
 import io.hhplus.tdd.point.TransactionType;
 import io.hhplus.tdd.point.UserPoint;
 import io.hhplus.tdd.service.PointService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class PointServiceImpl implements PointService {
@@ -36,7 +39,10 @@ public class PointServiceImpl implements PointService {
     @Override
     public UserPoint selectUserPoint(long id) {
         try {
-            return userPointDao.selectPointByUserId(id);
+            List<PointHistory> historyPoint = pointHistoryDao.selectAllByUserId(id);
+            long totalPoint = historyPoint.stream().mapToLong(PointHistory::amount).sum();
+//            return userPointDao.selectPointByUserId(id);
+            return new UserPoint(id, totalPoint, 0);
         } catch (Exception e) {
             return null;
         }
@@ -50,7 +56,7 @@ public class PointServiceImpl implements PointService {
             if(calAmount < 0) {
                 return null;
             }
-            pointHistoryDao.insert(id, calAmount, TransactionType.USE, System.currentTimeMillis());
+            pointHistoryDao.insert(id, amount, TransactionType.USE, System.currentTimeMillis());
             return userPointDao.useUserPoint(id, calAmount);
         } catch (Exception e) {
             return null;

@@ -1,6 +1,7 @@
 package io.hhplus.tdd.service;
 
 import io.hhplus.tdd.dao.PointHistoryDao;
+import io.hhplus.tdd.dao.UserPointDao;
 import io.hhplus.tdd.point.PointHistory;
 import io.hhplus.tdd.point.TransactionType;
 import io.hhplus.tdd.point.UserPoint;
@@ -22,12 +23,14 @@ public class PointServiceTest {
 
     private PointService pointService;
     private PointHistoryDao historyDao;
+    private UserPointDao pointDao;
     private static final Logger log = LoggerFactory.getLogger(PointServiceTest.class);
 
     @Autowired
-    public PointServiceTest(PointService pointService, PointHistoryDao historyDao) {
+    public PointServiceTest(PointService pointService, PointHistoryDao historyDao, UserPointDao userPointDao) {
         this.pointService = pointService;
         this.historyDao = historyDao;
+        this.pointDao = pointDao;
     }
 
     @Test
@@ -76,7 +79,7 @@ public class PointServiceTest {
         //when
         UserPoint userPoint = pointService.insertUserPoint(id, amount);
         //then
-        UserPoint selectPoint = pointService.selectUserPoint(id);
+        UserPoint selectPoint = pointDao.selectPointByUserId(id);
         assertThat(userPoint).isEqualTo(selectPoint);
     }
 
@@ -118,7 +121,7 @@ public class PointServiceTest {
         long amount = 10L;
         //when
         UserPoint userPoint = pointService.insertUserPoint(id, amount);
-        List<PointHistory> histories = historyDao.selectAllByUserId(userPoint.id());
+        List<PointHistory> histories = historyDao.selectAllByUserId(userPoint.id()).stream().filter(history -> history.type().equals(TransactionType.CHARGE)).toList();
         //then
         assertEquals(1, histories.size());
     }
@@ -137,7 +140,7 @@ public class PointServiceTest {
         pointService.insertUserPoint(id, amount);
         pointService.insertUserPoint(id2, amount);
 
-        List<PointHistory> histories = historyDao.selectAllByUserId(id);
+        List<PointHistory> histories = historyDao.selectAllByUserId(id).stream().filter(history -> history.type().equals(TransactionType.CHARGE)).toList();
         log.info("histories size: " + histories.size());
         //then
         assertEquals(4, histories.size());
@@ -154,7 +157,7 @@ public class PointServiceTest {
         //when
         pointService.insertUserPoint(id, amount);
         pointService.insertUserPoint(id, amount2);
-        long totalAmount = pointService.selectUserPoint(id).point();
+        long totalAmount = pointDao.selectPointByUserId(id).point();
 
         //then
         assertEquals(amount+amount2, totalAmount);
@@ -247,6 +250,27 @@ public class PointServiceTest {
 
         //then
         assertEquals(1, userHistory.size());
+    }
+
+
+    @Test
+    @DisplayName("첫번째 유저별 포인트 조회: 모든 타입의 history 금액 더하기")
+    void selectByUserIdandReturnNull() {
+        //given
+        long id = 3L;
+        long amount = 1000L;
+        long amount2 = 1200l;
+        long amount3 = 100L;
+        long total = amount3 + amount2 + amount;
+        UserPoint user1 = pointService.insertUserPoint(id, amount);
+        UserPoint user2 = pointService.insertUserPoint(id, amount2);
+        UserPoint user3 = pointService.useUserPoint(id, amount3);
+
+        //when
+        UserPoint userPoint = pointService.selectUserPoint(id);
+
+        //then
+        assertEquals(total, userPoint.point());
     }
 
 
