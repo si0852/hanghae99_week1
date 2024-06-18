@@ -262,6 +262,25 @@ public class PointServiceTest {
         assertEquals(0, selectHistory.size());
     }
 
+    @Test
+    @DisplayName("포인트 내역 조회 서비스 로직: 내역조회")
+    void selectPointHistory() {
+        //given
+        long id = 1L;
+        long amount = 1000L;
+        long amount2 = 1200l;
+        long usePoint = 2000L;
+        pointService.insertUserPoint(id, amount);
+        pointService.insertUserPoint(id, amount2);
+        pointService.useUserPoint(id, usePoint);
+
+        //when
+        List<PointHistory> selectHistory = pointService.selectPointHistory(id);
+        log.info("selectHistory : " + selectHistory.toString());
+        //then
+        assertEquals(3, selectHistory.size());
+    }
+
 //
 //    @Test
 //    @DisplayName("첫번째 유저별 포인트 조회: 모든 타입의 history 금액 더하기")

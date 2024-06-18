@@ -65,7 +65,7 @@ public class PointServiceImpl implements PointService {
     @Override
     public List<PointHistory> selectPointHistory(long id) {
         try {
-            return new ArrayList<>();
+            return pointHistoryDao.selectAllByUserId(id);
         } catch (Exception e) {
             return null;
         }
