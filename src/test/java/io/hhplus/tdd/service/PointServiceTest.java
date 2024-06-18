@@ -230,6 +230,25 @@ public class PointServiceTest {
         assertThat(useUserPoint).isNull();
     }
 
+    @Test
+    @DisplayName("다섯번째 유저별 포인트를 사용하는 서비스 로직: 사용 내역 history 테이블 추가")
+    void useServiceLogicWithHistory() {
+        //given
+        long id = 1L;
+        long amount = 1000L;
+        long amount2 = 1200l;
+        pointService.insertUserPoint(id, amount);
+        pointService.insertUserPoint(id, amount2);
+        long usePoint = 2000L;
+
+        //when
+        pointService.useUserPoint(id, usePoint);
+        List<PointHistory> userHistory = historyDao.selectAllByUserId(id).stream().filter(history -> history.type().equals(TransactionType.USE)).toList();
+
+        //then
+        assertEquals(1, userHistory.size());
+    }
+
 
 
 }

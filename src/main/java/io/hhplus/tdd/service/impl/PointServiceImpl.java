@@ -2,7 +2,6 @@ package io.hhplus.tdd.service.impl;
 
 import io.hhplus.tdd.dao.PointHistoryDao;
 import io.hhplus.tdd.dao.UserPointDao;
-import io.hhplus.tdd.point.PointHistory;
 import io.hhplus.tdd.point.TransactionType;
 import io.hhplus.tdd.point.UserPoint;
 import io.hhplus.tdd.service.PointService;
@@ -51,6 +50,7 @@ public class PointServiceImpl implements PointService {
             if(calAmount < 0) {
                 return null;
             }
+            pointHistoryDao.insert(id, calAmount, TransactionType.USE, System.currentTimeMillis());
             return userPointDao.useUserPoint(id, calAmount);
         } catch (Exception e) {
             return null;
