@@ -8,4 +8,6 @@ public interface PointService {
 
     UserPoint selectUserPoint(long id);
 
+    UserPoint useUserPoint(long id, long amount);
+
 }

@@ -69,16 +69,16 @@ class PointControllerTest {
     @DisplayName("특정 유저의 포인트를 사용하는 기능 Controller Test: id 넣을을때 200 코드 리턴")
     void use() throws Exception{
             //given
-            long userId = 1L;
-            long point = 1000L;
+            long id = 1L;
+            long amount = 1000L;
             UserPoint userPoint = new UserPoint(0, 0, 0);
             String content = objectMapper.writeValueAsString(userPoint);
 
             //when
             //then
-            mvc.perform(patch("/point/" + userId + "/use")
+            mvc.perform(patch("/point/" + id + "/use")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(String.valueOf(point)))
+                            .content(String.valueOf(amount)))
                     .andExpect(status().isOk())
                     .andExpect(content().json(content));
 

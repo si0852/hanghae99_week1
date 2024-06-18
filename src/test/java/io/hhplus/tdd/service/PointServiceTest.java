@@ -1,12 +1,9 @@
 package io.hhplus.tdd.service;
 
-import io.hhplus.tdd.controller.PointController;
 import io.hhplus.tdd.dao.PointHistoryDao;
-import io.hhplus.tdd.dao.UserPointDao;
 import io.hhplus.tdd.point.PointHistory;
 import io.hhplus.tdd.point.TransactionType;
 import io.hhplus.tdd.point.UserPoint;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -94,7 +91,7 @@ public class PointServiceTest {
         //when
         PointHistory insertPointHistory = historyDao.insert(id, amount, type, updateMillis);
         //then
-        assertThat(insertPointHistory).isNull();
+        assertThat(insertPointHistory).isNotNull();
     }
 
     @Test
@@ -147,7 +144,7 @@ public class PointServiceTest {
     }
 
     @Test
-    @DisplayName("번 유저별 포인트 저장하는 서비스로직: 충전시 기존에 있던 금액을 조회한 결과 포인트를 더해서 저장해야 한다.")
+    @DisplayName("여덟번쨰 유저별 포인트 저장하는 서비스로직: 충전시 기존에 있던 금액을 조회한 결과 포인트를 더해서 저장해야 한다.")
     void pointChargeServiceLogicForCalculate() {
         //given
         long id = 1L;
@@ -162,6 +159,38 @@ public class PointServiceTest {
         //then
         assertEquals(amount+amount2, totalAmount);
 
+    }
+
+    /**
+     * 포인트를 사용하는 서비스 로직
+     */
+    @Test
+    @DisplayName("첫번째 유저별 포인트를 사용하는 서비스 로직: 사용했을 경우 무조건 성공 케이스")
+    void usePointByUserandSuccessCase() {
+        //given
+        long id = 1L;
+        long amount = 1000L;
+        //when
+        UserPoint userPoint = pointService.useUserPoint(id, amount);
+        //then
+        assertThat(userPoint).isNull();
+    }
+
+    @Test
+    @DisplayName("두번째 용저별 포인트를 사용하는 서비스 로직: 포인트를 사용하기 전 금액 조회하기")
+    void selectPointforUsePoint() {
+        //given
+        long id = 1L;
+        long amount = 1000L;
+        long amount2 = 1200l;
+        pointService.insertUserPoint(id, amount);
+        pointService.insertUserPoint(id, amount2);
+
+        //when
+        UserPoint selectPointUser = pointService.useUserPoint(id,amount);
+
+        //then
+        assertEquals(amount+amount2, selectPointUser.point());
     }
 
 

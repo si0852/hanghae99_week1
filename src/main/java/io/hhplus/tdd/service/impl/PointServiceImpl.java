@@ -38,4 +38,9 @@ public class PointServiceImpl implements PointService {
     public UserPoint selectUserPoint(long id) {
         return userPointDao.selectPointByUserId(id);
     }
+
+    @Override
+    public UserPoint useUserPoint(long id, long amount) {
+        return userPointDao.selectPointByUserId(id);
+    }
 }
