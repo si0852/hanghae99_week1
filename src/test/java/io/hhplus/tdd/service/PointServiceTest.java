@@ -146,6 +146,24 @@ public class PointServiceTest {
         assertEquals(4, histories.size());
     }
 
+    @Test
+    @DisplayName("번 유저별 포인트 저장하는 서비스로직: 충전시 기존에 있던 금액을 조회한 결과 포인트를 더해서 저장해야 한다.")
+    void pointChargeServiceLogicForCalculate() {
+        //given
+        long id = 1L;
+        long amount = 1000L;
+        long amount2 = 1200l;
+
+        //when
+        pointService.insertUserPoint(id, amount);
+        pointService.insertUserPoint(id, amount2);
+        long totalAmount = pointService.selectUserPoint(id).point();
+
+        //then
+        assertEquals(amount+amount2, totalAmount);
+
+    }
+
 
 
 }

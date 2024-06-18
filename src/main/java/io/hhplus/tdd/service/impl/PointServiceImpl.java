@@ -25,8 +25,10 @@ public class PointServiceImpl implements PointService {
     @Override
     public UserPoint insertUserPoint(long id, long amount) {
         try {
+            UserPoint selectPointByUser = userPointDao.selectPointByUserId(id);
             pointHistoryDao.insert(id, amount, TransactionType.CHARGE, System.currentTimeMillis());
-            return userPointDao.insertUserPoint(id,amount);
+            long finalAmount = amount + selectPointByUser.point();
+            return userPointDao.insertUserPoint(id,finalAmount);
         } catch (Exception e) {
             return null;
         }
