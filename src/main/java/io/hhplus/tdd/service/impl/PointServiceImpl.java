@@ -48,6 +48,9 @@ public class PointServiceImpl implements PointService {
         try {
             UserPoint selectpoint = userPointDao.selectPointByUserId(id);
             long  calAmount = selectpoint.point() - amount;
+            if(calAmount < 0) {
+                return null;
+            }
             return userPointDao.useUserPoint(id, calAmount);
         } catch (Exception e) {
             return null;

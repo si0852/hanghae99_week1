@@ -212,6 +212,24 @@ public class PointServiceTest {
         assertEquals(calPoint, useUserPoint.point());
     }
 
+    @Test
+    @DisplayName("네번째 유저별 포인트를 사용하는 서비스 로직: 계산된 포인트가 < 0 일 경우")
+    void calculatePointMinus() {
+        //given
+        long id = 1L;
+        long amount = 1000L;
+        long amount2 = 1200l;
+        pointService.insertUserPoint(id, amount);
+        pointService.insertUserPoint(id, amount2);
+        long usePoint = 3000L;
+
+        //when
+        UserPoint useUserPoint = pointService.useUserPoint(id, usePoint);
+
+        //then
+        assertThat(useUserPoint).isNull();
+    }
+
 
 
 }
