@@ -1,6 +1,7 @@
 package io.hhplus.tdd.service;
 
 import io.hhplus.tdd.dao.PointHistoryDao;
+import io.hhplus.tdd.exception.NotEnoughPointException;
 import io.hhplus.tdd.point.PointHistory;
 import io.hhplus.tdd.point.TransactionType;
 import io.hhplus.tdd.point.UserPoint;
@@ -171,6 +172,7 @@ public class PointServiceTest {
         //given
         long id = Math.abs(UUID.randomUUID().getLeastSignificantBits());
         long amount = 1000L;
+        pointService.insertUserPoint(id, amount + amount);
         //when
         UserPoint userPoint = pointService.useUserPoint(id, amount);
         //then
@@ -220,15 +222,14 @@ public class PointServiceTest {
         long id = Math.abs(UUID.randomUUID().getLeastSignificantBits());
         long amount = 1000L;
         long amount2 = 1200l;
-        pointService.insertUserPoint(id, amount);
-        pointService.insertUserPoint(id, amount2);
         long usePoint = 3000L;
 
         //when
-        UserPoint useUserPoint = pointService.useUserPoint(id, usePoint);
+        pointService.insertUserPoint(id, amount);
+        pointService.insertUserPoint(id, amount2);
 
         //then
-        assertEquals(0, useUserPoint.point());
+        assertThrows(NotEnoughPointException.class, () -> {pointService.useUserPoint(id, usePoint);});
     }
 
     @Test
