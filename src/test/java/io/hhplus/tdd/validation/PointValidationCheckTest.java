@@ -11,20 +11,13 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 public class PointValidationCheckTest {
 
-    private PointValidator pointValidator;
-
-    @BeforeEach
-    void set() {
-        pointValidator = new PointValidator();
-    }
-
     @Test
     @DisplayName("사용한 포인트가 0보다 작을떄, return LACK")
     void lackOfPoint() {
         //given
         long point = -1;
         //when
-        PointValidationType pointValidationType = pointValidator.pointOfLackValidate(point);
+        PointValidationType pointValidationType = PointValidator.pointOfLackValidate(point);
         //then
         assertEquals(PointValidationType.LACK,pointValidationType);
     }
@@ -35,7 +28,7 @@ public class PointValidationCheckTest {
         //given
         long point = 1;
         //when
-        PointValidationType pointValidationType = pointValidator.pointOfLackValidate(point);
+        PointValidationType pointValidationType = PointValidator.pointOfLackValidate(point);
         //then
         assertEquals(PointValidationType.VALID,pointValidationType);
     }
