@@ -32,4 +32,15 @@ public class PointValidationCheckTest {
         //then
         assertEquals(PointValidationType.VALID,pointValidationType);
     }
+
+    @Test
+    @DisplayName("요청준 포인트가 0보다 작을때, return INVALID")
+    void requestValidOfPoint() {
+        //given
+        long point = -1;
+        //when
+        PointValidationType pointValidationType = PointValidator.requestPointValidate(point);
+        //then
+        assertEquals(PointValidationType.INVALID,pointValidationType);
+    }
 }

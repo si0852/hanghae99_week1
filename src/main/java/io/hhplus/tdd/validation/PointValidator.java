@@ -6,4 +6,8 @@ public class PointValidator {
         if(point < 0 )  return PointValidationType.LACK;
         return PointValidationType.VALID;
     }
+
+    public static PointValidationType requestPointValidate(long point) {
+        return PointValidationType.INVALID;
+    }
 }
