@@ -1,7 +1,9 @@
 package io.hhplus.tdd.service.impl;
 
+import io.hhplus.tdd.ErrorResponse;
 import io.hhplus.tdd.dao.PointHistoryDao;
 import io.hhplus.tdd.dao.UserPointDao;
+import io.hhplus.tdd.exception.NotEnoughPointException;
 import io.hhplus.tdd.point.PointHistory;
 import io.hhplus.tdd.point.TransactionType;
 import io.hhplus.tdd.point.UserPoint;
@@ -27,47 +29,31 @@ public class PointServiceImpl implements PointService {
 
 
     @Override
-    public UserPoint insertUserPoint(long id, long amount) {
-        try {
+    public UserPoint insertUserPoint(long id, long amount) throws Exception {
             UserPoint selectPointByUser = userPointDao.selectPointByUserId(id);
             pointHistoryDao.insert(id, amount, TransactionType.CHARGE, System.currentTimeMillis());
             long finalAmount = amount + selectPointByUser.point();
             return userPointDao.insertUserPoint(id,finalAmount);
-        } catch (Exception e) {
-            return null;
-        }
     }
 
     @Override
-    public UserPoint selectUserPoint(long id) {
-        try {
+    public UserPoint selectUserPoint(long id) throws Exception {
             return userPointDao.selectPointByUserId(id);
-        } catch (Exception e) {
-            return null;
-        }
     }
 
     @Override
-    public UserPoint useUserPoint(long id, long amount) {
-        try {
+    public UserPoint useUserPoint(long id, long amount) throws Exception {
             UserPoint selectpoint = userPointDao.selectPointByUserId(id);
             long  calAmount = selectpoint.point() - amount;
             if(calAmount < 0) {
-                return UserPoint.empty(id);
+                 throw new NotEnoughPointException(new ErrorResponse("500", "포인트가 부족합니다."));
             }
             pointHistoryDao.insert(id, amount, TransactionType.USE, System.currentTimeMillis());
             return userPointDao.useUserPoint(id, calAmount);
-        } catch (Exception e) {
-            return UserPoint.empty(id);
-        }
     }
 
     @Override
-    public List<PointHistory> selectPointHistory(long id) {
-        try {
-            return pointHistoryDao.selectAllByUserId(id);
-        } catch (Exception e) {
-            return null;
-        }
+    public List<PointHistory> selectPointHistory(long id) throws Exception {
+        return pointHistoryDao.selectAllByUserId(id);
     }
 }

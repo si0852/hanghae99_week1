@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface PointHistoryDao {
 
-    PointHistory insert(long userId, long amount, TransactionType type, long updateMillis);
+    PointHistory insert(long userId, long amount, TransactionType type, long updateMillis) throws Exception;
 
-    List<PointHistory> selectAllByUserId(long userId);
+    List<PointHistory> selectAllByUserId(long userId) throws Exception;
 }

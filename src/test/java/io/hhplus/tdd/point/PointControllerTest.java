@@ -45,7 +45,7 @@ class PointControllerTest {
     }
 
     @BeforeEach
-    void setData() {
+    void setData()  throws Exception{
         userPointDao.insertUserPoint(1L, amount1);
         userPointDao.insertUserPoint(1L, amount3);
         userPointDao.insertUserPoint(1L, amount2);
@@ -170,9 +170,7 @@ class PointControllerTest {
         mvc.perform(patch("/point/" + id + "/use")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(String.valueOf(amount)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(id))
-                .andExpect(jsonPath("$.point").value(0));
+                .andExpect(status().isInternalServerError());
     }
 
     @Test

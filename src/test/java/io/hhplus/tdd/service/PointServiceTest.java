@@ -32,7 +32,7 @@ public class PointServiceTest {
 
     @Test
     @DisplayName("첫번째 유저별 포인트 저장하는 서비스로직 : 모든 경우가 성공하는 경우")
-    void insertPointService() {
+    void insertPointService() throws Exception {
         //given
         long id = Math.abs(UUID.randomUUID().getLeastSignificantBits());
         long amount = 10L;
@@ -44,7 +44,7 @@ public class PointServiceTest {
 
     @Test
     @DisplayName("두번째 유저별 포인트 저장하는 서비스로직 : 충전한 유저 id와 충전양을 리턴")
-    void insertPointService2() {
+    void insertPointService2() throws Exception {
         //given
         long id = Math.abs(UUID.randomUUID().getLeastSignificantBits());
         long amount = 10L;
@@ -57,7 +57,7 @@ public class PointServiceTest {
 
     @Test
     @DisplayName("세번째 유저별 포인트 저장하는 서비스로직: dao, repository 연동하기")
-    void insertPointServiceConnectRepository() {
+    void insertPointServiceConnectRepository() throws Exception {
         //given
         long id = Math.abs(UUID.randomUUID().getLeastSignificantBits());
         long amount = 10L;
@@ -69,7 +69,7 @@ public class PointServiceTest {
 
     @Test
     @DisplayName("네번째 유저별 포인트 저장하는 서비스로직: 저장된 유저별 포인트와 조회하는 로직을 구현하여 맞는지 비교")
-    void insertPointServiceCreateRandomUUID() {
+    void insertPointServiceCreateRandomUUID() throws Exception {
         //given
         long id = Math.abs(UUID.randomUUID().getLeastSignificantBits());
         long amount = 10L;
@@ -82,7 +82,7 @@ public class PointServiceTest {
 
     @Test
     @DisplayName("다섯번째 유저별 포인트 저장하는 서비스로직: history 저장 Test(무조건 성공)")
-    void insertPointServiceCreateWithHistory() {
+    void insertPointServiceCreateWithHistory() throws Exception {
         //given
         long id = Math.abs(UUID.randomUUID().getLeastSignificantBits());
         long amount = 10L;
@@ -96,7 +96,7 @@ public class PointServiceTest {
 
     @Test
     @DisplayName("여섯번째 유저별 포인트 저장하는 서비스로직: history 저장 Test, 저장되는 정보 확인하기")
-    void insertPointServiceCreateWithInsertDataConfirm() {
+    void insertPointServiceCreateWithInsertDataConfirm() throws Exception {
         //given
         long id = Math.abs(UUID.randomUUID().getLeastSignificantBits());
         long amount = 10L;
@@ -113,7 +113,7 @@ public class PointServiceTest {
     // 실패케이스작성?
     @Test
     @DisplayName("일곱번째 유저별 포인트 저장하는 서비스로직: history 저장 로직추가 그리고 확인하기")
-    void addHistoryInsertLogicinServiceLogic() {
+    void addHistoryInsertLogicinServiceLogic() throws Exception {
         //given
         long id = Math.abs(UUID.randomUUID().getLeastSignificantBits());
         long amount = 10L;
@@ -126,7 +126,7 @@ public class PointServiceTest {
 
     @Test
     @DisplayName("일곱번째 유저별 포인트 저장하는 서비스로직: history 저장 로직추가 그리고 확인하기2")
-    void addHistoryInsertLogicinServiceLogic2() {
+    void addHistoryInsertLogicinServiceLogic2() throws Exception {
         //given
         long id = Math.abs(UUID.randomUUID().getLeastSignificantBits());
         long id2 = 1232322L;
@@ -146,7 +146,7 @@ public class PointServiceTest {
 
     @Test
     @DisplayName("여덟번쨰 유저별 포인트 저장하는 서비스로직: 충전시 기존에 있던 금액을 조회한 결과 포인트를 더해서 저장해야 한다.")
-    void pointChargeServiceLogicForCalculate() {
+    void pointChargeServiceLogicForCalculate() throws Exception {
         //given
         long id = Math.abs(UUID.randomUUID().getLeastSignificantBits());
         long amount = 1000L;
@@ -167,7 +167,7 @@ public class PointServiceTest {
      */
     @Test
     @DisplayName("첫번째 유저별 포인트를 사용하는 서비스 로직: 사용했을 경우 무조건 성공 케이스")
-    void usePointByUserandSuccessCase() {
+    void usePointByUserandSuccessCase() throws Exception {
         //given
         long id = Math.abs(UUID.randomUUID().getLeastSignificantBits());
         long amount = 1000L;
@@ -179,7 +179,7 @@ public class PointServiceTest {
 
     @Test
     @DisplayName("두번째 유저별 포인트를 사용하는 서비스 로직: 포인트를 사용하기 전 금액 조회하기")
-    void selectPointforUsePoint() {
+    void selectPointforUsePoint()  throws Exception{
         //given
         long id = Math.abs(UUID.randomUUID().getLeastSignificantBits());
         long amount = 1000L;
@@ -196,7 +196,7 @@ public class PointServiceTest {
 
     @Test
     @DisplayName("세번째 유저별 포인트를 사용하는 서비스 로직: 조회한 포인트 - 사용하는 포인트 계산하기")
-    void calculatePoint() {
+    void calculatePoint()  throws Exception{
         //given
         long id = Math.abs(UUID.randomUUID().getLeastSignificantBits());
         long amount = 1000L;
@@ -215,7 +215,7 @@ public class PointServiceTest {
 
     @Test
     @DisplayName("네번째 유저별 포인트를 사용하는 서비스 로직: 계산된 포인트가 < 0 일 경우")
-    void calculatePointMinus() {
+    void calculatePointMinus() throws Exception{
         //given
         long id = Math.abs(UUID.randomUUID().getLeastSignificantBits());
         long amount = 1000L;
@@ -233,7 +233,7 @@ public class PointServiceTest {
 
     @Test
     @DisplayName("다섯번째 유저별 포인트를 사용하는 서비스 로직: 사용 내역 history 테이블 추가")
-    void useServiceLogicWithHistory() {
+    void useServiceLogicWithHistory()  throws Exception{
         //given
         long id = Math.abs(UUID.randomUUID().getLeastSignificantBits());
         long amount = 1000L;
@@ -252,7 +252,7 @@ public class PointServiceTest {
 
     @Test
     @DisplayName("포인트 내역 조회 서비스 로직: 빈 리스트 리턴")
-    void selectPointHistoryandReturnEmptyList() {
+    void selectPointHistoryandReturnEmptyList() throws Exception {
         //given
         long id = Math.abs(UUID.randomUUID().getLeastSignificantBits());
 
@@ -265,7 +265,7 @@ public class PointServiceTest {
 
     @Test
     @DisplayName("포인트 내역 조회 서비스 로직: 내역조회")
-    void selectPointHistory() {
+    void selectPointHistory() throws Exception {
         //given
         long id = Math.abs(UUID.randomUUID().getLeastSignificantBits());
         long amount = 1000L;
