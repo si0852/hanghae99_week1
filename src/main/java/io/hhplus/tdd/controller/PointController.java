@@ -26,7 +26,9 @@ public class PointController {
 
 
     /**
-     * TODO - 특정 유저의 포인트를 조회하는 기능을 작성해주세요.
+     * 특정 유저의 포인트를 조회 Controller
+     * @PathVariable id
+     * @return ResponseEntity<UserPoint>
      */
     @GetMapping("{id}")
     public ResponseEntity<UserPoint> point(
@@ -36,7 +38,9 @@ public class PointController {
     }
 
     /**
-     * TODO - 특정 유저의 포인트 충전/이용 내역을 조회하는 기능을 작성해주세요.
+     * 특정 유저의 포인트 충전/이용 내역을 조회 Controller
+     * @PathVariable id
+     * @return ResponseEntity<List<PointHistory>>
      */
     @GetMapping("{id}/histories")
     public ResponseEntity<List<PointHistory>> history(
@@ -46,7 +50,10 @@ public class PointController {
     }
 
     /**
-     * TODO - 특정 유저의 포인트를 충전하는 기능을 작성해주세요.
+     * 특정 유저의 포인트를 충전 Controller
+     * @PathVariable id
+     * @RequestBody amount
+     * @return ResponseEntity<UserPoint>
      */
     @PatchMapping("{id}/charge")
     public ResponseEntity<UserPoint> charge(
@@ -57,7 +64,10 @@ public class PointController {
     }
 
     /**
-     * TODO - 특정 유저의 포인트를 사용하는 기능을 작성해주세요.
+     * 특정 유저의 포인트를 사용 Controller
+     * @PathVariable id
+     * @RequestBody amount
+     * @return ResponseEntity<UserPoint>
      */
     @PatchMapping("{id}/use")
     public ResponseEntity<UserPoint> use (

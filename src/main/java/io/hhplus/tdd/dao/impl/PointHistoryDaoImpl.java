@@ -20,11 +20,26 @@ public class PointHistoryDaoImpl implements PointHistoryDao {
     }
 
 
+    /**
+     * 포인트 충전/사용 이력 저장
+     * @param userId
+     * @param amount
+     * @param type
+     * @param updateMillis
+     * @return
+     * @throws Exception
+     */
     @Override
     public PointHistory insert(long userId, long amount, TransactionType type, long updateMillis) throws Exception {
         return pointHistoryTable.insert(userId, amount, type, updateMillis);
     }
 
+    /**
+     * 유저별 포인트 충전/사용 내역 조회
+     * @param userId
+     * @return
+     * @throws Exception
+     */
     @Override
     public List<PointHistory> selectAllByUserId(long userId) throws Exception {
         return pointHistoryTable.selectAllByUserId(userId);
