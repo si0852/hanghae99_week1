@@ -1,5 +1,7 @@
 package io.hhplus.tdd.validation;
 
+import io.hhplus.tdd.exception.BadRequestPointException;
+import io.hhplus.tdd.exception.NotEnoughPointException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,6 +34,18 @@ public class PointValidationCheckTest {
     }
 
     @Test
+    @DisplayName("사용한 포인트가 0보다 작을떄, Exception 발생")
+    void validOfPointWithException() {
+        //given
+        long point = -1;
+        //when
+        PointValidationType pointValidationType = PointValidator.pointOfLackValidate(point);
+        //then
+        assertThrows(NotEnoughPointException.class, () -> {
+            PointValidator.validate(pointValidationType);});
+    }
+
+    @Test
     @DisplayName("요청준 포인트가 0보다 작을때, return INVALID")
     void requestValidOfPoint() {
         //given
@@ -51,5 +65,17 @@ public class PointValidationCheckTest {
         PointValidationType pointValidationType = PointValidator.requestPointValidate(point);
         //then
         assertEquals(PointValidationType.VALID,pointValidationType);
+    }
+
+    @Test
+    @DisplayName("요청준 포인트가 0보다 작을떄, Exception 발생")
+    void requestValidOfPointWithException() {
+        //given
+        long point = -1;
+        //when
+        PointValidationType pointValidationType = PointValidator.requestPointValidate(point);
+        //then
+        assertThrows(BadRequestPointException.class, () -> {
+            PointValidator.validate(pointValidationType);});
     }
 }

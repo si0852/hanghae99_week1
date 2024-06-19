@@ -1,5 +1,6 @@
 package io.hhplus.tdd;
 
+import io.hhplus.tdd.exception.BadRequestPointException;
 import io.hhplus.tdd.exception.NotEnoughPointException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,7 +15,12 @@ class ApiControllerAdvice extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(value = NotEnoughPointException.class)
-    public ResponseEntity<ErrorResponse> handleRunTimeException(NotEnoughPointException e) {
+    public ResponseEntity<ErrorResponse> NotEnoughPointException(NotEnoughPointException e) {
+        return ResponseEntity.status(500).body(e.getErrorResponse());
+    }
+
+    @ExceptionHandler(value = BadRequestPointException.class)
+    public ResponseEntity<ErrorResponse> BadRequestPointException(BadRequestPointException e) {
         return ResponseEntity.status(500).body(e.getErrorResponse());
     }
 }
