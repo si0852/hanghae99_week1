@@ -3,6 +3,7 @@ package io.hhplus.tdd.validation;
 public class PointValidator {
 
     public PointValidationType pointOfLackValidate(long point) {
-        return PointValidationType.LACK;
+        if(point < 0 )  return PointValidationType.LACK;
+        return PointValidationType.VALID;
     }
 }

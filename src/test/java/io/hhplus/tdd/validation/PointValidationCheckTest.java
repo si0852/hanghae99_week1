@@ -28,4 +28,15 @@ public class PointValidationCheckTest {
         //then
         assertEquals(PointValidationType.LACK,pointValidationType);
     }
+
+    @Test
+    @DisplayName("사용한 포인트가 0보다 클떄, return VALID")
+    void validOfPoint() {
+        //given
+        long point = 1;
+        //when
+        PointValidationType pointValidationType = pointValidator.pointOfLackValidate(point);
+        //then
+        assertEquals(PointValidationType.VALID,pointValidationType);
+    }
 }
