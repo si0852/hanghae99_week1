@@ -1,6 +1,7 @@
 package io.hhplus.tdd.service;
 
 import io.hhplus.tdd.dao.PointHistoryDao;
+import io.hhplus.tdd.exception.BadRequestPointException;
 import io.hhplus.tdd.exception.NotEnoughPointException;
 import io.hhplus.tdd.point.PointHistory;
 import io.hhplus.tdd.point.TransactionType;
@@ -283,66 +284,16 @@ public class PointServiceTest {
         assertEquals(3, selectHistory.size());
     }
 
-//
-//    @Test
-//    @DisplayName("첫번째 유저별 포인트 조회: 모든 타입의 history 금액 더하기")
-//    void selectByUserIdandReturnNull() {
-//        //given
-//        long id = 3L;
-//        long amount = 1000L;
-//        long amount2 = 1200l;
-//        long amount3 = 100L;
-//        long total = amount3 + amount2 + amount;
-//        UserPoint user1 = pointService.insertUserPoint(id, amount);
-//        UserPoint user2 = pointService.insertUserPoint(id, amount2);
-//        UserPoint user3 = pointService.useUserPoint(id, amount3);
-//
-//        //when
-//        UserPoint userPoint = pointService.selectUserPoint(id);
-//
-//        //then
-//        assertEquals(total, userPoint.point());
-//    }
-//
-//    @Test
-//    @DisplayName("두번째 유저별 포인트 조회: 타입별(charge) history 금액 더하기")
-//    void selectByUserIdandTypeSum() {
-//        //given
-//        long id = 3L;
-//        long amount = 1000L;
-//        long amount2 = 1200l;
-//        long amount3 = 100L;
-//        long total = amount + amount2;
-//        UserPoint user1 = pointService.insertUserPoint(id, amount);
-//        UserPoint user2 = pointService.insertUserPoint(id, amount2);
-//        UserPoint user3 = pointService.useUserPoint(id, amount3);
-//
-//        //when
-//        UserPoint userPoint = pointService.selectUserPoint(id);
-//
-//        //then
-//        assertEquals(total, userPoint.point());
-//    }
-//
-//    @Test
-//    @DisplayName("세번째 유저별 포인트 조회: 타입별(use) history 금액 더하기")
-//    void selectByUserIdandUseTypeSum() {
-//        //given
-//        long id = 3L;
-//        long amount = 1000L;
-//        long amount2 = 1200l;
-//        long amount3 = 100L;
-//        long total = amount2 + amount3;
-//        UserPoint user1 = pointService.insertUserPoint(id, amount);
-//        UserPoint user2 = pointService.useUserPoint(id, amount2);
-//        UserPoint user3 = pointService.useUserPoint(id, amount3);
-//
-//        //when
-//        UserPoint userPoint = pointService.selectUserPoint(id);
-//
-//        //then
-//        assertEquals(total, userPoint.point());
-//    }
+    @Test
+    @DisplayName("요청준 point에 대한 테스트 진행: 0보다 작을떄")
+    void requestPointTest() {
+        //given
+        long id = 1;
+        long amount = -1;
+        //when
+        //then
+        assertThrows(BadRequestPointException.class, () -> pointService.insertUserPoint(id, amount));
+    }
 
 
 }

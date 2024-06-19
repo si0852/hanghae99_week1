@@ -8,6 +8,7 @@ import io.hhplus.tdd.point.PointHistory;
 import io.hhplus.tdd.point.TransactionType;
 import io.hhplus.tdd.point.UserPoint;
 import io.hhplus.tdd.service.PointService;
+import io.hhplus.tdd.validation.PointValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,14 +39,16 @@ public class PointServiceImpl implements PointService {
      */
     @Override
     public UserPoint insertUserPoint(long id, long amount) throws Exception {
-            // 기존 저장되어 있는 포인트 조회
-            UserPoint selectPointByUser = userPointDao.selectPointByUserId(id);
-            // 구매 히스토리 저장
-            pointHistoryDao.insert(id, amount, TransactionType.CHARGE, System.currentTimeMillis());
-            // 조회한 포인트 + 충전할 포인트
-            long finalAmount = amount + selectPointByUser.point();
-            // 최종 계산된 포인트와 id 저장
-            return userPointDao.insertUserPoint(id,finalAmount);
+        // 요청준 point에 대한 validation
+        PointValidator.validate(PointValidator.requestPointValidate(amount));
+        // 기존 저장되어 있는 포인트 조회
+        UserPoint selectPointByUser = userPointDao.selectPointByUserId(id);
+        // 구매 히스토리 저장
+        pointHistoryDao.insert(id, amount, TransactionType.CHARGE, System.currentTimeMillis());
+        // 조회한 포인트 + 충전할 포인트
+        long finalAmount = amount + selectPointByUser.point();
+        // 최종 계산된 포인트와 id 저장
+        return userPointDao.insertUserPoint(id,finalAmount);
     }
 
     /**
@@ -57,7 +60,7 @@ public class PointServiceImpl implements PointService {
      */
     @Override
     public UserPoint selectUserPoint(long id) throws Exception {
-            return userPointDao.selectPointByUserId(id);
+        return userPointDao.selectPointByUserId(id);
     }
 
     /**
@@ -69,18 +72,18 @@ public class PointServiceImpl implements PointService {
      */
     @Override
     public UserPoint useUserPoint(long id, long amount) throws Exception {
-            // 기존에 충전된 포인트조회
-            UserPoint selectpoint = userPointDao.selectPointByUserId(id);
-            // 조회한 포인트조회 - 사용할 포인트 계산
-            long  calAmount = selectpoint.point() - amount;
-            // 계산된 포인트가 마이너스이면 에러 발생
-            if(calAmount < 0) {
-                 throw new NotEnoughPointException(new ErrorResponse("500", "포인트가 부족합니다."));
-            }
-            // history 저장
-            pointHistoryDao.insert(id, amount, TransactionType.USE, System.currentTimeMillis());
-            // 계산된 포인트 업데이트
-            return userPointDao.useUserPoint(id, calAmount);
+        // 요청준 point에 대한 validation
+        PointValidator.validate(PointValidator.requestPointValidate(amount));
+        // 기존에 충전된 포인트조회
+        UserPoint selectpoint = userPointDao.selectPointByUserId(id);
+        // 조회한 포인트조회 - 사용할 포인트 계산
+        long  calAmount = selectpoint.point() - amount;
+        // 계산된 포인트가 마이너스이면 에러 발생
+        PointValidator.validate(PointValidator.pointOfLackValidate(calAmount));
+        // history 저장
+        pointHistoryDao.insert(id, amount, TransactionType.USE, System.currentTimeMillis());
+        // 계산된 포인트 업데이트
+        return userPointDao.useUserPoint(id, calAmount);
     }
 
     /**
