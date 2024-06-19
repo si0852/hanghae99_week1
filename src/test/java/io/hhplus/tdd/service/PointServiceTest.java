@@ -34,7 +34,7 @@ public class PointServiceTest {
     @DisplayName("첫번째 유저별 포인트 저장하는 서비스로직 : 모든 경우가 성공하는 경우")
     void insertPointService() {
         //given
-        long id = 1L;
+        long id = Math.abs(UUID.randomUUID().getLeastSignificantBits());
         long amount = 10L;
         //when
         UserPoint userPoint = pointService.insertUserPoint(id, amount);
@@ -46,20 +46,20 @@ public class PointServiceTest {
     @DisplayName("두번째 유저별 포인트 저장하는 서비스로직 : 충전한 유저 id와 충전양을 리턴")
     void insertPointService2() {
         //given
-        long id = 1L;
+        long id = Math.abs(UUID.randomUUID().getLeastSignificantBits());
         long amount = 10L;
-        long millis = System.currentTimeMillis();
         //when
+        UserPoint beforeUserPoint = pointService.selectUserPoint(amount);
         UserPoint userPoint = pointService.insertUserPoint(id, amount);
         //then
-        assertThat(userPoint).isEqualTo(new UserPoint(id, amount, userPoint.updateMillis()));
+        assertThat(beforeUserPoint.point()+amount).isEqualTo(userPoint.point());
     }
 
     @Test
     @DisplayName("세번째 유저별 포인트 저장하는 서비스로직: dao, repository 연동하기")
     void insertPointServiceConnectRepository() {
         //given
-        long id = 1L;
+        long id = Math.abs(UUID.randomUUID().getLeastSignificantBits());
         long amount = 10L;
         //when
         UserPoint userPoint = pointService.insertUserPoint(id, amount);
@@ -102,11 +102,12 @@ public class PointServiceTest {
         long amount = 10L;
         TransactionType type = TransactionType.CHARGE;
         long updateMillis = System.currentTimeMillis();
-        PointHistory history = new PointHistory(1,id, amount, type, updateMillis);
         //when
         PointHistory insertPointHistory = historyDao.insert(id, amount, type, updateMillis);
+        List<PointHistory> history = historyDao.selectAllByUserId(id);
         //then
-        assertThat(insertPointHistory).isEqualTo(history);
+        assertEquals(1, history.size());
+        assertThat(insertPointHistory).isEqualTo(history.get(0));
     }
 
     // 실패케이스작성?
@@ -128,7 +129,7 @@ public class PointServiceTest {
     void addHistoryInsertLogicinServiceLogic2() {
         //given
         long id = Math.abs(UUID.randomUUID().getLeastSignificantBits());
-        long id2 = 11111L;
+        long id2 = 1232322L;
         long amount = 10L;
         //when
         pointService.insertUserPoint(id, amount);
@@ -147,7 +148,7 @@ public class PointServiceTest {
     @DisplayName("여덟번쨰 유저별 포인트 저장하는 서비스로직: 충전시 기존에 있던 금액을 조회한 결과 포인트를 더해서 저장해야 한다.")
     void pointChargeServiceLogicForCalculate() {
         //given
-        long id = 1L;
+        long id = Math.abs(UUID.randomUUID().getLeastSignificantBits());
         long amount = 1000L;
         long amount2 = 1200l;
 
@@ -168,19 +169,19 @@ public class PointServiceTest {
     @DisplayName("첫번째 유저별 포인트를 사용하는 서비스 로직: 사용했을 경우 무조건 성공 케이스")
     void usePointByUserandSuccessCase() {
         //given
-        long id = 1L;
+        long id = Math.abs(UUID.randomUUID().getLeastSignificantBits());
         long amount = 1000L;
         //when
         UserPoint userPoint = pointService.useUserPoint(id, amount);
         //then
-        assertThat(userPoint).isNull();
+        assertThat(userPoint).isNotNull();
     }
 
     @Test
     @DisplayName("두번째 유저별 포인트를 사용하는 서비스 로직: 포인트를 사용하기 전 금액 조회하기")
     void selectPointforUsePoint() {
         //given
-        long id = 1L;
+        long id = Math.abs(UUID.randomUUID().getLeastSignificantBits());
         long amount = 1000L;
         long amount2 = 1200l;
         pointService.insertUserPoint(id, amount);
@@ -190,14 +191,14 @@ public class PointServiceTest {
         UserPoint selectPointUser = pointService.useUserPoint(id,amount);
 
         //then
-        assertEquals(amount+amount2, selectPointUser.point());
+        assertEquals(amount2, selectPointUser.point());
     }
 
     @Test
     @DisplayName("세번째 유저별 포인트를 사용하는 서비스 로직: 조회한 포인트 - 사용하는 포인트 계산하기")
     void calculatePoint() {
         //given
-        long id = 1L;
+        long id = Math.abs(UUID.randomUUID().getLeastSignificantBits());
         long amount = 1000L;
         long amount2 = 1200l;
         pointService.insertUserPoint(id, amount);
@@ -216,7 +217,7 @@ public class PointServiceTest {
     @DisplayName("네번째 유저별 포인트를 사용하는 서비스 로직: 계산된 포인트가 < 0 일 경우")
     void calculatePointMinus() {
         //given
-        long id = 1L;
+        long id = Math.abs(UUID.randomUUID().getLeastSignificantBits());
         long amount = 1000L;
         long amount2 = 1200l;
         pointService.insertUserPoint(id, amount);
@@ -227,14 +228,14 @@ public class PointServiceTest {
         UserPoint useUserPoint = pointService.useUserPoint(id, usePoint);
 
         //then
-        assertThat(useUserPoint).isNull();
+        assertEquals(0, useUserPoint.point());
     }
 
     @Test
     @DisplayName("다섯번째 유저별 포인트를 사용하는 서비스 로직: 사용 내역 history 테이블 추가")
     void useServiceLogicWithHistory() {
         //given
-        long id = 1L;
+        long id = Math.abs(UUID.randomUUID().getLeastSignificantBits());
         long amount = 1000L;
         long amount2 = 1200l;
         pointService.insertUserPoint(id, amount);
@@ -253,7 +254,7 @@ public class PointServiceTest {
     @DisplayName("포인트 내역 조회 서비스 로직: 빈 리스트 리턴")
     void selectPointHistoryandReturnEmptyList() {
         //given
-        long id = 1L;
+        long id = Math.abs(UUID.randomUUID().getLeastSignificantBits());
 
         //when
         List<PointHistory> selectHistory = pointService.selectPointHistory(id);
@@ -266,7 +267,7 @@ public class PointServiceTest {
     @DisplayName("포인트 내역 조회 서비스 로직: 내역조회")
     void selectPointHistory() {
         //given
-        long id = 1L;
+        long id = Math.abs(UUID.randomUUID().getLeastSignificantBits());
         long amount = 1000L;
         long amount2 = 1200l;
         long usePoint = 2000L;
