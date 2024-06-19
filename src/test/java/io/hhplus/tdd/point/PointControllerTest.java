@@ -71,7 +71,7 @@ class PointControllerTest {
         String content = objectMapper.writeValueAsString(userPoint);
         //when
         //then
-        mvc.perform(get("/point/"+id))
+        mvc.perform(get("/point/{id}", id))
                 .andExpect(status().isOk())
                 .andExpect(content().json(content));
     }
@@ -116,7 +116,7 @@ class PointControllerTest {
 
         //when
         //then
-        mvc.perform(patch( "/point/"+id+"/charge")
+        mvc.perform(patch( "/point/{id}/charge", id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(String.valueOf(amount)))
                 .andExpect(status().isOk())

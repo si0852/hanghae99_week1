@@ -29,7 +29,7 @@ public class PointController {
      */
     @GetMapping("{id}")
     public UserPoint point(
-            @PathVariable long id
+            @PathVariable(name = "id") long id
     ) {
         return pointService.selectUserPoint(id);
     }
@@ -39,7 +39,7 @@ public class PointController {
      */
     @GetMapping("{id}/histories")
     public List<PointHistory> history(
-            @PathVariable long id
+            @PathVariable(name = "id") long id
     ) {
         return pointService.selectPointHistory(id);
     }
@@ -49,7 +49,7 @@ public class PointController {
      */
     @PatchMapping("{id}/charge")
     public UserPoint charge(
-            @PathVariable long id,
+            @PathVariable(name = "id") long id,
             @RequestBody long amount
     ) {
         return pointService.insertUserPoint(id, amount);
