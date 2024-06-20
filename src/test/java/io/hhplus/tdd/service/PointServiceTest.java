@@ -45,7 +45,10 @@ public class PointServiceTest {
     @Test
     @DisplayName("동시 포인트 요청 Test : synchronized")
     void usePointReqeustAtTheSameTime() throws Exception{
+        UserPoint selectPoint = pointService.selectUserPoint(1123123123L);
+        log.info("selectPoint : " + selectPoint.toString());
         //given
+        pointService.insertUserPoint(1123123123L, 1000L);
         final int threadCount = 100;
         final ExecutorService executorService = Executors.newFixedThreadPool(32);
         final CountDownLatch countDownLatch = new CountDownLatch(threadCount);
@@ -54,7 +57,8 @@ public class PointServiceTest {
         for (int i = 0; i < threadCount; i++) {
             executorService.submit(() -> {
                 try {
-                    pointService.useUserPoint(1L, 10L);
+                    UserPoint userPoint = pointService.useUserPoint(1123123123L, 10L);
+                    log.info("userPoint : " + userPoint.toString());
                 } catch (Exception e) {
                     log.info("message: " + e.getMessage());
                 }finally {
@@ -63,7 +67,7 @@ public class PointServiceTest {
             });
         }
         countDownLatch.await();
-        UserPoint userPoint = pointService.selectUserPoint(1L);
+        UserPoint userPoint = pointService.selectUserPoint(1123123123L);
         assertThat(userPoint.point()).isEqualTo(0);
     }
 
