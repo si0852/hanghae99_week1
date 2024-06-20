@@ -21,7 +21,7 @@ public class PointController {
 
     private PointService pointService;
 
-    @Autowired
+
     public PointController(PointService pointService) {
         this.pointService = pointService;
     }

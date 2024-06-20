@@ -4,7 +4,6 @@ import io.hhplus.tdd.dao.PointHistoryDao;
 import io.hhplus.tdd.database.PointHistoryTable;
 import io.hhplus.tdd.point.PointHistory;
 import io.hhplus.tdd.point.TransactionType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -14,7 +13,6 @@ public class PointHistoryDaoImpl implements PointHistoryDao {
 
     private PointHistoryTable pointHistoryTable;
 
-    @Autowired
     public PointHistoryDaoImpl(PointHistoryTable pointHistoryTable){
         this.pointHistoryTable = pointHistoryTable;
     }

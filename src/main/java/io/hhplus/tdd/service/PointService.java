@@ -1,6 +1,5 @@
 package io.hhplus.tdd.service;
 
-import io.hhplus.tdd.exception.NotEnoughPointException;
 import io.hhplus.tdd.point.PointHistory;
 import io.hhplus.tdd.point.UserPoint;
 

@@ -1,6 +1,5 @@
 package io.hhplus.tdd.service.impl;
 
-import io.hhplus.tdd.concurrency.threadlocal.ThreadLocalConCurrencyControl;
 import io.hhplus.tdd.dao.PointHistoryDao;
 import io.hhplus.tdd.dao.UserPointDao;
 import io.hhplus.tdd.point.PointHistory;
@@ -8,7 +7,6 @@ import io.hhplus.tdd.point.TransactionType;
 import io.hhplus.tdd.point.UserPoint;
 import io.hhplus.tdd.service.PointService;
 import io.hhplus.tdd.validation.PointValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,7 +21,6 @@ public class PointServiceImpl implements PointService {
     private UserPointDao userPointDao;
     private PointHistoryDao pointHistoryDao;
 
-    @Autowired
     public PointServiceImpl(UserPointDao userPointDao, PointHistoryDao pointHistoryDao) {
         this.userPointDao = userPointDao;
         this.pointHistoryDao = pointHistoryDao;
