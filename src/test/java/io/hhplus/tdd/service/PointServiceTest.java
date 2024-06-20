@@ -54,6 +54,7 @@ public class PointServiceTest {
         for (int i = 0; i < threadCount; i++) {
             executorService.submit(() -> {
                 try {
+                    sleep(500);
                     pointService.useUserPoint(1L, 10L);
                 } catch (Exception e) {
                     log.info("message: " + e.getMessage());
@@ -65,6 +66,14 @@ public class PointServiceTest {
         countDownLatch.await();
         UserPoint userPoint = pointService.selectUserPoint(1L);
         assertThat(userPoint.point()).isEqualTo(0);
+    }
+
+    private void sleep(int millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test

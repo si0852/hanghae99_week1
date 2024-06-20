@@ -15,7 +15,7 @@ public class PointHistoryDaoImpl implements PointHistoryDao {
     private PointHistoryTable pointHistoryTable;
 
     @Autowired
-    public PointHistoryDaoImpl(PointHistoryTable pointHistoryTable) throws Exception {
+    public PointHistoryDaoImpl(PointHistoryTable pointHistoryTable){
         this.pointHistoryTable = pointHistoryTable;
     }
 
@@ -30,7 +30,7 @@ public class PointHistoryDaoImpl implements PointHistoryDao {
      * @throws Exception
      */
     @Override
-    public PointHistory insert(long userId, long amount, TransactionType type, long updateMillis) throws Exception {
+    public PointHistory insert(long userId, long amount, TransactionType type, long updateMillis){
         return pointHistoryTable.insert(userId, amount, type, updateMillis);
     }
 
@@ -41,7 +41,7 @@ public class PointHistoryDaoImpl implements PointHistoryDao {
      * @throws Exception
      */
     @Override
-    public List<PointHistory> selectAllByUserId(long userId) throws Exception {
+    public List<PointHistory> selectAllByUserId(long userId){
         return pointHistoryTable.selectAllByUserId(userId);
     }
 }

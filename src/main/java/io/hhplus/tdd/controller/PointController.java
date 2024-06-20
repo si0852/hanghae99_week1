@@ -1,5 +1,7 @@
 package io.hhplus.tdd.controller;
 
+import io.hhplus.tdd.concurrency.ConCurrencyStatus;
+import io.hhplus.tdd.concurrency.threadlocal.ConCurrencyControl;
 import io.hhplus.tdd.point.PointHistory;
 import io.hhplus.tdd.point.UserPoint;
 import io.hhplus.tdd.service.PointService;
@@ -18,10 +20,12 @@ public class PointController {
     private static final Logger log = LoggerFactory.getLogger(PointController.class);
 
     private PointService pointService;
+    private ConCurrencyControl control;
 
     @Autowired
-    public PointController(PointService pointService) {
+    public PointController(PointService pointService, ConCurrencyControl control) {
         this.pointService = pointService;
+        this.control = control;
     }
 
 
@@ -74,6 +78,9 @@ public class PointController {
             @PathVariable(name = "id") long id,
             @RequestBody long amount
     ) throws Exception {
-        return ResponseEntity.ok().body(pointService.useUserPoint(id,amount));
+        ConCurrencyStatus status = control.begin();
+        ResponseEntity<UserPoint> responseEntity = ResponseEntity.ok().body(pointService.useUserPoint(id, amount));
+        control.end(status);
+        return responseEntity;
     }
 }

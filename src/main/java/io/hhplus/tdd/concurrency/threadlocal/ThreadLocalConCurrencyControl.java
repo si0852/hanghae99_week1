@@ -26,13 +26,13 @@ public class ThreadLocalConCurrencyControl implements ConCurrencyControl{
         }
     }
 
-    private void logTest(ConCurrencyStatus conCurrencyStatus) {
+    private void logTrace(ConCurrencyStatus conCurrencyStatus) {
         log.info("getConCurrencyId : " + conCurrencyStatus.getConCurrencyId());
     }
 
     @Override
     public void end(ConCurrencyStatus conCurrencyStatus) {
-        logTest(conCurrencyStatus);
+        logTrace(conCurrencyStatus);
         ConCurrencyId conCurrencyId = controlIdHolder.get();
         if (conCurrencyId.isFirstLevel()) {
             controlIdHolder.remove();

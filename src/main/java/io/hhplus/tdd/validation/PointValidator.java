@@ -7,12 +7,18 @@ import io.hhplus.tdd.exception.NotEnoughPointException;
 public class PointValidator {
 
     public static PointValidationType pointOfLackValidate(long point) {
-        if(point < 0 )  return PointValidationType.LACK;
+        if(point <= 0 )  return PointValidationType.LACK;
         return PointValidationType.VALID;
     }
 
     public static PointValidationType requestPointValidate(long point) {
-        if(point < 0 )  return PointValidationType.INVALID;
+        if(point <= 0 )  return PointValidationType.INVALID;
+        return PointValidationType.VALID;
+    }
+
+
+    public static PointValidationType requestPointValidate(long point, long id) {
+        if(point <= 0 || id <= 0)  return PointValidationType.INVALID;
         return PointValidationType.VALID;
     }
 
