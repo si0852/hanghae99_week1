@@ -54,7 +54,6 @@ public class PointServiceTest {
         for (int i = 0; i < threadCount; i++) {
             executorService.submit(() -> {
                 try {
-                    sleep(500);
                     pointService.useUserPoint(1L, 10L);
                 } catch (Exception e) {
                     log.info("message: " + e.getMessage());
@@ -68,13 +67,6 @@ public class PointServiceTest {
         assertThat(userPoint.point()).isEqualTo(0);
     }
 
-    private void sleep(int millis) {
-        try {
-            Thread.sleep(millis);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
 
     @Test
     @DisplayName("첫번째 유저별 포인트 저장하는 서비스로직 : 모든 경우가 성공하는 경우")
@@ -332,7 +324,7 @@ public class PointServiceTest {
     @DisplayName("요청준 point에 대한 테스트 진행: 0보다 작을떄")
     void requestPointTest() {
         //given
-        long id = 1;
+        long id = 101111;
         long amount = -1;
         //when
         //then

@@ -12,12 +12,10 @@ import org.springframework.stereotype.Component;
 public class UserPointDaoImpl implements UserPointDao {
 
     private UserPointTable userPointRepository;
-    private ConCurrencyControl control;
 
     @Autowired
-    public UserPointDaoImpl(UserPointTable userPointRepository, ConCurrencyControl control) {
+    public UserPointDaoImpl(UserPointTable userPointRepository) {
         this.userPointRepository = userPointRepository;
-        this.control = control;
     }
 
     /**
@@ -52,18 +50,8 @@ public class UserPointDaoImpl implements UserPointDao {
      */
     @Override
     public UserPoint useUserPoint(long id, long amount){
-        ConCurrencyStatus status = control.begin();
-        sleep(500);
         UserPoint userResultPoint = userPointRepository.insertOrUpdate(id, amount);
-        control.end(status);
         return userResultPoint;
     }
 
-    private void sleep(int millis) {
-        try {
-            Thread.sleep(millis);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
 }

@@ -20,12 +20,10 @@ public class PointController {
     private static final Logger log = LoggerFactory.getLogger(PointController.class);
 
     private PointService pointService;
-    private ConCurrencyControl control;
 
     @Autowired
-    public PointController(PointService pointService, ConCurrencyControl control) {
+    public PointController(PointService pointService) {
         this.pointService = pointService;
-        this.control = control;
     }
 
 
@@ -78,9 +76,7 @@ public class PointController {
             @PathVariable(name = "id") long id,
             @RequestBody long amount
     ) throws Exception {
-        ConCurrencyStatus status = control.begin();
         ResponseEntity<UserPoint> responseEntity = ResponseEntity.ok().body(pointService.useUserPoint(id, amount));
-        control.end(status);
         return responseEntity;
     }
 }

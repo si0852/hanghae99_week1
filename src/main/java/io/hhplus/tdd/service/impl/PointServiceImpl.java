@@ -13,20 +13,20 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.locks.ReentrantLock;
 
 
 @Service
 public class PointServiceImpl implements PointService {
 
+    private final ReentrantLock lock = new ReentrantLock();
     private UserPointDao userPointDao;
     private PointHistoryDao pointHistoryDao;
-    private ThreadLocalConCurrencyControl control;
 
     @Autowired
-    public PointServiceImpl(UserPointDao userPointDao, PointHistoryDao pointHistoryDao, ThreadLocalConCurrencyControl control) {
+    public PointServiceImpl(UserPointDao userPointDao, PointHistoryDao pointHistoryDao) {
         this.userPointDao = userPointDao;
         this.pointHistoryDao = pointHistoryDao;
-        this.control = control;
     }
 
 
@@ -40,6 +40,7 @@ public class PointServiceImpl implements PointService {
      */
     @Override
     public UserPoint insertUserPoint(long id, long amount) throws Exception {
+        lock.lock();
         try {
             // 기존 저장되어 있는 포인트 조회
             UserPoint selectPointByUser = getUserPoint(id);
@@ -50,6 +51,7 @@ public class PointServiceImpl implements PointService {
         }finally {
             // 구매 히스토리 저장
             insertHistory(id, amount, TransactionType.CHARGE, System.currentTimeMillis());
+            lock.unlock();
         }
     }
 
@@ -73,9 +75,8 @@ public class PointServiceImpl implements PointService {
      * @throws Exception
      */
     @Override
-//    public synchronized UserPoint useUserPoint(long id, long amount) throws Exception {
-
     public UserPoint useUserPoint(long id, long amount) throws Exception {
+        lock.lock();
         try {
             // 기존에 충전된 포인트조회
             UserPoint selectpoint = getUserPoint(id);
@@ -89,6 +90,7 @@ public class PointServiceImpl implements PointService {
         }finally {
             // history 저장
             insertHistory(id, amount, TransactionType.USE, System.currentTimeMillis());
+            lock.unlock();
         }
     }
 
