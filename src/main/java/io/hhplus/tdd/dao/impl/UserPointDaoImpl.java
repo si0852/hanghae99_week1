@@ -15,7 +15,7 @@ public class UserPointDaoImpl implements UserPointDao {
     private ConCurrencyControl control;
 
     @Autowired
-    public UserPointDaoImpl(UserPointTable userPointRepository, ConCurrencyControl control) throws Exception {
+    public UserPointDaoImpl(UserPointTable userPointRepository, ConCurrencyControl control) {
         this.userPointRepository = userPointRepository;
         this.control = control;
     }
@@ -28,7 +28,7 @@ public class UserPointDaoImpl implements UserPointDao {
      * @throws Exception
      */
     @Override
-    public UserPoint insertUserPoint(long id, long amount) throws Exception {
+    public UserPoint insertUserPoint(long id, long amount) {
         return userPointRepository.insertOrUpdate(id, amount);
     }
 
@@ -39,7 +39,7 @@ public class UserPointDaoImpl implements UserPointDao {
      * @throws Exception
      */
     @Override
-    public UserPoint selectPointByUserId(long id) throws Exception {
+    public UserPoint selectPointByUserId(long id) {
         return userPointRepository.selectById(id);
     }
 
@@ -51,7 +51,7 @@ public class UserPointDaoImpl implements UserPointDao {
      * @throws Exception
      */
     @Override
-    public UserPoint useUserPoint(long id, long amount) throws Exception {
+    public UserPoint useUserPoint(long id, long amount){
         ConCurrencyStatus status = control.begin();
         sleep(500);
         UserPoint userResultPoint = userPointRepository.insertOrUpdate(id, amount);
