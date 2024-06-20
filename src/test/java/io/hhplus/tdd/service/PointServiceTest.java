@@ -6,6 +6,7 @@ import io.hhplus.tdd.exception.NotEnoughPointException;
 import io.hhplus.tdd.point.PointHistory;
 import io.hhplus.tdd.point.TransactionType;
 import io.hhplus.tdd.point.UserPoint;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -15,6 +16,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,6 +34,37 @@ public class PointServiceTest {
     public PointServiceTest(PointService pointService, PointHistoryDao historyDao) {
         this.pointService = pointService;
         this.historyDao = historyDao;
+    }
+
+    @BeforeEach
+    void setUp() throws Exception{
+        pointService.insertUserPoint(1L, 1000L);
+        pointService.insertUserPoint(2L, 2000L);
+    }
+
+    @Test
+    @DisplayName("동시 포인트 요청 Test : synchronized")
+    void usePointReqeustAtTheSameTime() throws Exception{
+        //given
+        final int threadCount = 100;
+        final ExecutorService executorService = Executors.newFixedThreadPool(32);
+        final CountDownLatch countDownLatch = new CountDownLatch(threadCount);
+
+        //when
+        for (int i = 0; i < threadCount; i++) {
+            executorService.submit(() -> {
+                try {
+                    pointService.useUserPoint(1L, 10L);
+                } catch (Exception e) {
+                    log.info("message: " + e.getMessage());
+                }finally {
+                    countDownLatch.countDown();
+                }
+            });
+        }
+        countDownLatch.await();
+        UserPoint userPoint = pointService.selectUserPoint(1L);
+        assertThat(userPoint.point()).isEqualTo(0);
     }
 
     @Test

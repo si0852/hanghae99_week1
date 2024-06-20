@@ -71,7 +71,7 @@ public class PointServiceImpl implements PointService {
      * @throws Exception
      */
     @Override
-    public UserPoint useUserPoint(long id, long amount) throws Exception {
+    public synchronized UserPoint useUserPoint(long id, long amount) throws Exception {
         // 요청준 point에 대한 validation
         PointValidator.validate(PointValidator.requestPointValidate(amount));
         // 기존에 충전된 포인트조회
