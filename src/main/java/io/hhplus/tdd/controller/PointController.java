@@ -1,5 +1,7 @@
 package io.hhplus.tdd.controller;
 
+import io.hhplus.tdd.dto.PointHistoryDto;
+import io.hhplus.tdd.dto.UserDto;
 import io.hhplus.tdd.point.PointHistory;
 import io.hhplus.tdd.point.UserPoint;
 import io.hhplus.tdd.service.PointService;
@@ -9,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/point")
@@ -27,13 +30,14 @@ public class PointController {
     /**
      * 특정 유저의 포인트를 조회 Controller
      * @PathVariable id
-     * @return ResponseEntity<UserPoint>
+     * @return ResponseEntity<UserDto>
      */
     @GetMapping("{id}")
-    public ResponseEntity<UserPoint> point(
+    public ResponseEntity<UserDto> point(
             @PathVariable(name = "id") long id
     ) throws Exception  {
-        return ResponseEntity.ok().body(pointService.selectUserPoint(id));
+        UserPoint selectUserPoint = pointService.selectUserPoint(id);
+        return ResponseEntity.ok().body(new UserDto(selectUserPoint.id(), selectUserPoint.point(), selectUserPoint.updateMillis()));
     }
 
     /**
@@ -42,10 +46,13 @@ public class PointController {
      * @return ResponseEntity<List<PointHistory>>
      */
     @GetMapping("{id}/histories")
-    public ResponseEntity<List<PointHistory>> history(
+    public ResponseEntity<List<PointHistoryDto>> history(
             @PathVariable(name = "id") long id
     )  throws Exception {
-        return ResponseEntity.ok().body(pointService.selectPointHistory(id));
+        List<PointHistory> pointHistories = pointService.selectPointHistory(id);
+        return ResponseEntity.ok().body(pointHistories.stream()
+                .map(data -> new PointHistoryDto(data.id(), data.userId(), data.amount(), data.type(), data.updateMillis()))
+                .collect(Collectors.toList()));
     }
 
     /**
@@ -55,25 +62,26 @@ public class PointController {
      * @return ResponseEntity<UserPoint>
      */
     @PatchMapping("{id}/charge")
-    public ResponseEntity<UserPoint> charge(
+    public ResponseEntity<UserDto> charge(
             @PathVariable(name = "id") long id,
             @RequestBody long amount
     ) throws Exception  {
-        return ResponseEntity.ok().body(pointService.insertUserPoint(id, amount));
+        UserPoint userPoint = pointService.insertUserPoint(id, amount);
+        return ResponseEntity.ok().body(new UserDto(userPoint.id(), userPoint.point(), userPoint.updateMillis()));
     }
 
     /**
      * 특정 유저의 포인트를 사용 Controller
      * @PathVariable id
      * @RequestBody amount
-     * @return ResponseEntity<UserPoint>
+     * @return ResponseEntity<UserDto>
      */
     @PatchMapping("{id}/use")
-    public ResponseEntity<UserPoint> use (
+    public ResponseEntity<UserDto> use (
             @PathVariable(name = "id") long id,
             @RequestBody long amount
     ) throws Exception {
-        ResponseEntity<UserPoint> responseEntity = ResponseEntity.ok().body(pointService.useUserPoint(id, amount));
-        return responseEntity;
+        UserPoint userPoint = pointService.useUserPoint(id, amount);
+        return ResponseEntity.ok().body(new UserDto(userPoint.id(), userPoint.point(), userPoint.updateMillis()));
     }
 }

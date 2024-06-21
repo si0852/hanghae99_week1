@@ -3,6 +3,8 @@ package io.hhplus.tdd.point;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.hhplus.tdd.dao.PointHistoryDao;
 import io.hhplus.tdd.dao.UserPointDao;
+import io.hhplus.tdd.dto.PointHistoryDto;
+import io.hhplus.tdd.dto.UserDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -68,7 +71,7 @@ class PointControllerTest {
         //given
         long id = 1L;
         UserPoint userPoint = userPointDao.selectPointByUserId(id);
-        String content = objectMapper.writeValueAsString(userPoint);
+        String content = objectMapper.writeValueAsString(new UserDto(userPoint.id(), userPoint.point(), userPoint.updateMillis()));
         //when
         //then
         mvc.perform(get("/point/{id}", id))
@@ -82,7 +85,7 @@ class PointControllerTest {
         //given
         long id = 1L;
         UserPoint userPoint = userPointDao.selectPointByUserId(id);
-        String content = objectMapper.writeValueAsString(userPoint);
+        String content = objectMapper.writeValueAsString(new UserDto(userPoint.id(), userPoint.point(), userPoint.updateMillis()));
         //when
         //then
         mvc.perform(get("/point/"+id))
@@ -96,7 +99,7 @@ class PointControllerTest {
         //given
         long id = 2L;
         UserPoint userPoint = userPointDao.selectPointByUserId(id);
-        String content = objectMapper.writeValueAsString(userPoint);
+        String content = objectMapper.writeValueAsString(new UserDto(userPoint.id(), userPoint.point(), userPoint.updateMillis()));
         //when
         //then
         mvc.perform(get("/point/"+id))
@@ -111,8 +114,7 @@ class PointControllerTest {
         long id = 1L;
         long amount = 1000L;
         UserPoint userPoint = userPointDao.selectPointByUserId(id);
-        log.info("userPoint : " + userPoint);
-        String content = objectMapper.writeValueAsString(userPoint);
+        UserDto userDto = new UserDto(userPoint.id(), userPoint.point(), userPoint.updateMillis());
 
         //when
         //then
@@ -120,7 +122,7 @@ class PointControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(String.valueOf(amount)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.point").value(userPoint.point()+amount));
+                .andExpect(jsonPath("$.point").value(userDto.getPoint()+amount));
     }
 
     @Test
@@ -130,6 +132,7 @@ class PointControllerTest {
         long id = 2L;
         long amount = 1000L;
         UserPoint userPoint = userPointDao.selectPointByUserId(id);
+        UserDto userDto = new UserDto(userPoint.id(), userPoint.point(), userPoint.updateMillis());
 
         //when
         //then
@@ -138,7 +141,7 @@ class PointControllerTest {
                         .content(String.valueOf(amount)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(id))
-                .andExpect(jsonPath("$.point").value(amount+userPoint.point()));
+                .andExpect(jsonPath("$.point").value(amount+userDto.getPoint()));
     }
 
     @Test
@@ -148,6 +151,7 @@ class PointControllerTest {
             long id = 2L;
             long amount = 1000L;
             UserPoint userPoint = userPointDao.selectPointByUserId(id);
+            UserDto userDto = new UserDto(userPoint.id(), userPoint.point(), userPoint.updateMillis());
 
             //when
             //then
@@ -155,7 +159,7 @@ class PointControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(String.valueOf(amount)))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.point").value(userPoint.point()-amount));
+                    .andExpect(jsonPath("$.point").value(userDto.getPoint()-amount));
     }
 
     @Test
@@ -180,6 +184,7 @@ class PointControllerTest {
         long id = 3L;
         long amount = 1000L;
         UserPoint userPoint = userPointDao.selectPointByUserId(id);
+        UserDto userDto = new UserDto(userPoint.id(), userPoint.point(), userPoint.updateMillis());
 
         //when
         //then
@@ -188,7 +193,7 @@ class PointControllerTest {
                         .content(String.valueOf(amount)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(id))
-                .andExpect(jsonPath("$.point").value(userPoint.point()-amount));
+                .andExpect(jsonPath("$.point").value(userDto.getPoint()-amount));
     }
 
     @Test
@@ -196,8 +201,12 @@ class PointControllerTest {
     void history() throws Exception {
         //given
         long id = 2L;
+        List<PointHistory> pointHistories = pointHistoryDao.selectAllByUserId(id);
+        List<PointHistoryDto> pointHistoryDtos = pointHistories.stream()
+                .map(data -> new PointHistoryDto(data.id(), data.userId(), data.amount(), data.type(), data.updateMillis()))
+                .collect(Collectors.toList());
 
-        String content = objectMapper.writeValueAsString(pointHistoryDao.selectAllByUserId(id));
+        String content = objectMapper.writeValueAsString(pointHistoryDtos);
 
         //when
         //then
@@ -212,8 +221,10 @@ class PointControllerTest {
         //given
         long id = 2L;
         List<PointHistory> pointHistories = pointHistoryDao.selectAllByUserId(id);
-        log.info("pointHistories : " + pointHistories.toString());
-        String content = objectMapper.writeValueAsString(pointHistories);
+        List<PointHistoryDto> pointHistoryDtos = pointHistories.stream()
+                .map(data -> new PointHistoryDto(data.id(), data.userId(), data.amount(), data.type(), data.updateMillis()))
+                .collect(Collectors.toList());
+        String content = objectMapper.writeValueAsString(pointHistoryDtos);
 
         //when
         //then
