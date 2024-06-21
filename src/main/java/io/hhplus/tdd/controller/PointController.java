@@ -43,7 +43,7 @@ public class PointController {
     /**
      * 특정 유저의 포인트 충전/이용 내역을 조회 Controller
      * @PathVariable id
-     * @return ResponseEntity<List<PointHistory>>
+     * @return ResponseEntity<List<PointHistoryDto>>
      */
     @GetMapping("{id}/histories")
     public ResponseEntity<List<PointHistoryDto>> history(
@@ -59,7 +59,7 @@ public class PointController {
      * 특정 유저의 포인트를 충전 Controller
      * @PathVariable id
      * @RequestBody amount
-     * @return ResponseEntity<UserPoint>
+     * @return ResponseEntity<UserDto>
      */
     @PatchMapping("{id}/charge")
     public ResponseEntity<UserDto> charge(
